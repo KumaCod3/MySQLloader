@@ -1,6 +1,5 @@
 package SRC;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -58,7 +57,6 @@ public class Main {
 		try {
 				connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+DataBaseNAME+"?characterEncoding=latin1&useConfigs=maxPerformance","root",PASSWORD);
 				statement = connection.createStatement();
-				
 				ScriptRunner runner = new ScriptRunner(connection , false, false);
 				runner.runScript(new BufferedReader(new FileReader("proDB.sql")));
 		} catch (Exception ex) {
