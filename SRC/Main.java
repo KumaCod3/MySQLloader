@@ -1,11 +1,14 @@
 package SRC;
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class Main {
 	private static Connection connection;
@@ -14,6 +17,7 @@ public class Main {
 	private static String DataBaseNAME="pro"/*+"negozioDB"*/;
 	
 	public static void main(String[] args) {
+		PASSWORD=chiediPW();		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+DataBaseNAME+"?characterEncoding=latin1&useConfigs=maxPerformance","root",PASSWORD);
@@ -22,9 +26,16 @@ public class Main {
 		catch (SQLException e) {
 			System.out.println("MySQL DATABASE missing");
 			creaDB();
-			importaDB();
 		}
 		tryQuery(0);
+	}
+	
+	private static String chiediPW() {
+		System.out.println("Insert DataBase Password:");
+		Scanner sc=new Scanner(System.in);
+		String pw=sc.next();
+		sc.close();
+		return pw;
 	}
 	static public String tryQuery(int x) {
 		try {
@@ -50,7 +61,22 @@ public class Main {
 			Statement st = connection.createStatement();
 			String sql="CREATE DATABASE "+DataBaseNAME;
 			st.executeUpdate(sql);
-		}catch (SQLException e) { System.out.println("imposs creare DB");}
+		}catch (SQLException e) { 
+			System.out.println("manca software MySQL");
+			scaricaMySQL();
+			return;
+			}
+		importaDB();
+	}
+	
+	private static void scaricaMySQL() {
+		System.out.println("MySQL not installed, install it please.");
+		try {
+	        Desktop.getDesktop().browse(new URL("https://dev.mysql.com/downloads/mysql/").toURI());
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+		
 	}
 	
 	private static void importaDB() {  
